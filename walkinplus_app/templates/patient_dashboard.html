@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WalkIn+ – Patient Dashboard</title>
+
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --cvs-red: #CC0000;
+            --cvs-dark: #A00000;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #ffe9e9 0, #f8f9fa 50%, #ffffff 100%);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .navbar-brand {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--cvs-red) !important;
+            letter-spacing: 0.04em;
+        }
+
+        .page-wrapper {
+            min-height: calc(100vh - 70px);
+            padding: 24px 16px 32px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--cvs-red);
+        }
+
+        .label-pill {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #999;
+            font-weight: 600;
+        }
+
+        .queue-card, .form-card {
+            border-radius: 18px;
+            border: 1px solid #ececec;
+            background: #ffffff;
+            box-shadow: 0 14px 36px rgba(0,0,0,0.08);
+            padding: 18px 18px 16px;
+        }
+
+        .queue-list {
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .queue-item {
+            border-radius: 12px;
+            border: 1px solid #f0f0f0;
+            padding: 10px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .queue-item + .queue-item {
+            margin-top: 8px;
+        }
+
+        .queue-main {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .queue-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .queue-time {
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        .btn-clockout {
+            font-size: 0.8rem;
+            border-radius: 999px;
+            padding: 4px 10px;
+        }
+
+        .form-control, .form-select, textarea.form-control {
+            border-radius: 10px;
+            padding: 8px 10px;
+        }
+
+        .btn-cvs {
+            background: var(--cvs-red);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 999px;
+            padding: 9px 18px;
+        }
+
+        .btn-cvs:hover {
+            background: var(--cvs-dark);
+        }
+
+        /* Toast position */
+        .toast-container {
+            z-index: 1080;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
+    <div class="container">
+        <a class="navbar-brand" href="/home/">
+            WalkIn+
+        </a>
+    </div>
+</nav>
+
+<!-- PAGE CONTENT -->
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row g-3">
+            <!-- Left: Queue -->
+            <div class="col-lg-4">
+                <div class="queue-card">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <div class="section-title mb-0">Today’s Queue</div>
+                            <div class="text-muted small">
+                                Live walk-in list – {{ selected_business_name|default:"Clinic" }}
+                            </div>
+                        </div>
+                        <span class="badge bg-light text-dark border small">
+                            {{ today_date|default:"Today" }}
+                        </span>
+                    </div>
+
+                    <div class="queue-list mt-2">
+                        {% if visits %}
+                            {% for v in visits %}
+                            <div class="queue-item">
+                                <div class="queue-main">
+                                    <div class="queue-name">
+                                        {{ v.cust_name|default:"Customer Name" }}
+                                    </div>
+                                    <div class="queue-time">
+                                        In since {{ v.cust_clockin|time:"h:i A" }}
+                                    </div>
+                                </div>
+
+                                <!-- Clock-out button -->
+                                <form method="post" class="ms-2">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="clockout">
+                                    <input type="hidden" name="visit_id" value="{{ v.cust_id }}">
+                                    <button type="submit" class="btn btn-outline-success btn-clockout">
+                                        Clock-out
+                                    </button>
+                                </form>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-muted small mt-2">
+                                No walk-ins registered yet. Add a new customer on the right.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: New Walk-in Form -->
+            <div class="col-lg-8">
+                <div class="form-card">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <div class="section-title mb-0">New Walk-In</div>
+                            <div class="text-muted small">
+                                {{ selected_business_name|default:"Clinic" }}.
+                            </div>
+                        </div>
+                        <span class="label-pill">Walk-In ENTRY</span>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="new_walkin">
+                        <div class="row g-3 mt-1">
+                            <div class="col-md-4">
+                                <label class="form-label small mb-1">Mobile Number</label>
+                                <input type="tel" class="form-control" name="phone" placeholder="+91 98765 43210" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small mb-1">First Name</label>
+                                <input type="text" class="form-control" name="first_name" placeholder="First name" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small mb-1">Last Name</label>
+                                <input type="text" class="form-control" name="last_name" placeholder="Last name">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label small mb-1">Date of Birth</label>
+                                <input type="date" class="form-control" name="dob">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label small mb-1">Companion Name</label>
+                                <input type="text" class="form-control" name="care_of" placeholder="Ex: Companion Name">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label small mb-1">Relation</label>
+                                <input type="text" class="form-control" name="relation" placeholder="Father, Mother, Friend">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label small mb-1">Purpose of Visit</label>
+                                <textarea class="form-control" name="purpose" rows="2"
+                                          placeholder=""></textarea>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label small mb-1">Additional Notes (optional)</label>
+                                <textarea class="form-control" name="notes" rows="2"
+                                          placeholder=""></textarea>
+                            </div>
+
+                            <div class="col-12 d-flex justify-content-end mt-2">
+                                <button type="submit" class="btn-cvs">
+                                    <i class="fa-solid fa-plus me-1"></i> Register Walk-In
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- TOASTS: small popup alerts on this page -->
+{% if messages %}
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    {% for message in messages %}
+    <div class="toast align-items-center text-bg-
+        {% if 'error' in message.tags %}danger
+        {% elif 'warning' in message.tags %}warning
+        {% elif 'success' in message.tags %}success
+        {% else %}primary
+        {% endif %}
+        border-0 mb-2"
+         role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{ message }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+        toastElList.forEach(function (toastEl) {
+            const t = new bootstrap.Toast(toastEl, {delay: 2500});
+            t.show();
+        });
+    });
+</script>
+</body>
+</html>

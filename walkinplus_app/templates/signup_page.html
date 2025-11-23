@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WalkIn+ – Business Signup</title>
+
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --cvs-red: #CC0000;
+            --cvs-dark: #A00000;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #ffe8e8 0, #ffffff 40%, #f5f6fb 100%);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .auth-wrapper {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Soft floating shapes */
+        .auth-wrapper::before,
+        .auth-wrapper::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(18px);
+            opacity: 0.22;
+            z-index: 0;
+        }
+
+        .auth-wrapper::before {
+            width: 220px;
+            height: 220px;
+            background: #ffd6d6;
+            top: 5%;
+            left: 2%;
+        }
+
+        .auth-wrapper::after {
+            width: 260px;
+            height: 260px;
+            background: #ffefef;
+            bottom: 0;
+            right: -3%;
+        }
+
+        .brand-title {
+            color: var(--cvs-red);
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: 0.05em;
+        }
+
+        .brand-subtitle {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: #999;
+        }
+
+        .signup-card {
+            border-radius: 22px;
+            border: 1px solid #ececec;
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .signup-header {
+            background: linear-gradient(135deg, #ffffff, #ffe4e4);
+            padding: 24px 30px 20px;
+        }
+
+        .signup-body {
+            padding: 24px 30px 30px;
+        }
+
+        .btn-cvs {
+            background: var(--cvs-red);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 999px;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+        }
+
+        .btn-cvs:hover {
+            background: var(--cvs-dark);
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.92rem;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 0.1rem rgba(204,0,0,0.25);
+            border-color: rgba(204,0,0,0.6);
+        }
+
+        .form-label {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .small-link {
+            color: var(--cvs-red);
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .small-link:hover {
+            text-decoration: underline;
+        }
+
+        .bg-side {
+            background: radial-gradient(circle at top left, #ff8787 0, #CC0000 40%, #8f0000 100%);
+            color: #fff;
+            position: relative;
+        }
+
+        .bg-side::before {
+            content: "";
+            position: absolute;
+            top: 18%;
+            right: -15%;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            filter: blur(4px);
+        }
+
+        .bg-side h2 {
+            font-weight: 800;
+        }
+
+        .feature-pill {
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.45);
+            padding: 6px 12px;
+            font-size: 0.82rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(2px);
+        }
+
+        .feature-pill i {
+            font-size: 0.85rem;
+        }
+
+        .side-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.5);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #ffe9e9;
+            margin-bottom: 12px;
+        }
+
+        .side-badge i {
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container auth-wrapper d-flex align-items-center justify-content-center">
+    <div class="row w-100 justify-content-center">
+        <div class="col-lg-9 col-xl-8">
+
+            <div class="row signup-card">
+                <!-- Left side: Signup form -->
+                <div class="col-lg-7 bg-white">
+                    <div class="signup-header d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="brand-title">WalkIn+</div>
+                            <div class="brand-subtitle">
+                                CREATE YOUR BUSINESS ACCOUNT
+                            </div>
+                        </div>
+                        <a href="/" class="small-link small">
+                            <i class="fa-solid fa-arrow-left-long me-1"></i> Back to website
+                        </a>
+                    </div>
+
+                    <div class="signup-body">
+                        <h4 class="fw-bold mb-1">Get started in a few steps</h4>
+                        <p class="text-muted mb-3 small">
+                            Create your admin login to manage walk-ins for your clinic, salon, repair shop,
+                            coaching center or any service business.
+                        </p>
+
+                        <!-- Alert messages -->
+                        {% if error %}
+                            <div class="alert alert-danger py-2 small" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endif %}
+                        {% if success %}
+                            <div class="alert alert-success py-2 small" role="alert">
+                                {{ success }}
+                            </div>
+                        {% endif %}
+
+                        <form method="post">
+                            {% csrf_token %}
+
+                            <!-- Row 1: Owner + Username -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Owner / Admin Name</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="owner_name"
+                                           placeholder="Business owner / Admin"
+                                           required
+                                           value="{{ form.owner_name|default:'' }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Username</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="username"
+                                           placeholder="yourbusiness_admin"
+                                           required
+                                           value="{{ form.username|default:'' }}">
+                                </div>
+                            </div>
+
+                            <!-- Row 2: Email + Phone (side by side) -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Business Email</label>
+                                    <input type="email"
+                                           class="form-control"
+                                           name="email"
+                                           placeholder="you@yourbusiness.com"
+                                           required
+                                           value="{{ form.email|default:'' }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Mobile Number</label>
+                                    <input type="tel"
+                                           class="form-control"
+                                           name="phone"
+                                           placeholder="+91 98765 43210"
+                                           required
+                                           value="{{ form.phone|default:'' }}">
+                                </div>
+                            </div>
+
+                            <!-- Login credentials -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Password</label>
+                                    <input type="password"
+                                           class="form-control"
+                                           name="password"
+                                           placeholder="••••••••"
+                                           required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Confirm Password</label>
+                                    <input type="password"
+                                           class="form-control"
+                                           name="confirm_password"
+                                           placeholder="••••••••"
+                                           required>
+                                </div>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" value="1" id="termsCheck" required>
+                                <label class="form-check-label small" for="termsCheck">
+                                    I agree to the <a href="#" class="small-link">Terms</a> and <a href="#" class="small-link">Privacy Policy</a>.
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-cvs w-100">
+                                Create Account
+                            </button>
+                        </form>
+
+                        <div class="text-center mt-4">
+                            <span class="text-muted small">Already have an account?</span>
+                            <a href="/login/" class="small-link ms-1">Login</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right side: Branding / Benefits -->
+                <div class="col-lg-5 bg-side d-none d-lg-flex flex-column justify-content-between p-4">
+                    <div>
+                        <div class="side-badge">
+                            <i class="fa-solid fa-bolt"></i> Made for walk-in businesses
+                        </div>
+                        <h2 class="mb-3">From paper to a live dashboard.</h2>
+                        <p class="mb-4">
+                            Track every walk-in, visit purpose and in–out time across one or multiple branches.
+                            Built for clinics, salons, repair shops, coaching institutes and more.
+                        </p>
+
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <div class="feature-pill">
+                                <i class="fa-solid fa-users"></i> Unlimited walk-ins
+                            </div>
+                            <div class="feature-pill">
+                                <i class="fa-solid fa-layer-group"></i> Multi-business support
+                            </div>
+                            <div class="feature-pill">
+                                <i class="fa-solid fa-clock"></i> Auto time capture
+                            </div>
+                            <div class="feature-pill">
+                                <i class="fa-solid fa-file-export"></i> Easy export for records
+                            </div>
+                            <div class="feature-pill">
+                                <i class="fa-solid fa-mobile-screen"></i> Works on any device
+                            </div>
+                        </div>
+
+                        <small class="text-white-75">
+                            No complex setup. No IT team required.
+                            Just sign up, add your business, and start recording walk-ins in minutes.
+                        </small>
+                    </div>
+
+                    <div class="small text-white-50 mt-4">
+                        © 2025 WalkIn+. All rights reserved.
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

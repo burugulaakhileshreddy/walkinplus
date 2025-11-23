@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WalkIn+ – Digital Walk-In Register</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --cvs-red: #CC0000;
+            --cvs-dark: #A00000;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #ffffff;
+        }
+
+        /* NAVBAR */
+        .navbar-brand {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: var(--cvs-red) !important;
+            letter-spacing: 0.04em;
+        }
+
+        .btn-cvs {
+            background: var(--cvs-red);
+            color: #fff !important;
+            border-radius: 999px;
+            padding: 8px 22px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .btn-cvs:hover {
+            background: var(--cvs-dark);
+        }
+
+        .btn-ghost {
+            border-radius: 999px;
+            padding: 8px 18px;
+            font-weight: 600;
+            border: 1px solid #e0e0e0;
+            background: #fff;
+            color: #444;
+        }
+
+        .btn-ghost:hover {
+            background: #f7f7f7;
+        }
+
+        /* HERO */
+        .hero {
+            padding: 90px 0 70px;
+            background: radial-gradient(circle at top left, #ffe8e8 0, #fff 45%, #fdf2f2 100%);
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--cvs-red);
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: #555;
+            max-width: 520px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid #ffd1d1;
+            font-size: 0.8rem;
+            color: #a33;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        /* HERO SLIDER – card based, no arrows */
+        .hero-slider-wrap {
+            max-width: 480px;
+            margin-left: auto;
+        }
+
+        .hero-carousel {
+            border-radius: 20px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.10);
+        }
+
+        .hero-slide-card {
+            padding: 24px 26px 26px;
+            min-height: 240px;
+        }
+
+        /* Slightly different backgrounds per slide */
+        .hero-slide-1 {
+            background: linear-gradient(135deg, #fff8f8, #ffffff);
+        }
+        .hero-slide-2 {
+            background: linear-gradient(135deg, #fff5f0, #ffffff);
+        }
+        .hero-slide-3 {
+            background: linear-gradient(135deg, #fff7ff, #ffffff);
+        }
+
+        .hero-slide-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #aa4444;
+            background: #fff5f5;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .hero-slide-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-top: 14px;
+            margin-bottom: 6px;
+            color: #333;
+        }
+
+        .hero-slide-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .hero-slide-meta {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .hero-mock {
+            margin-top: 12px;
+            border-radius: 12px;
+            border: 1px dashed #f1b2b2;
+            padding: 10px 12px;
+            font-size: 0.78rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #555;
+        }
+
+        /* Carousel indicators only (no visible arrows) */
+        .hero-carousel .carousel-indicators {
+            margin-bottom: 10px;
+        }
+
+        .hero-carousel .carousel-indicators [data-bs-target] {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background-color: #fcc;
+        }
+
+        .hero-carousel .carousel-indicators .active {
+            width: 16px;
+            background-color: var(--cvs-red);
+        }
+
+        /* Hide prev/next icons completely */
+        .hero-carousel .carousel-control-prev,
+        .hero-carousel .carousel-control-next {
+            display: none;
+        }
+
+        /* SECTION SHARED */
+        .section-title {
+            font-size: 2.1rem;
+            font-weight: 700;
+            color: var(--cvs-red);
+            margin-bottom: 18px;
+        }
+
+        .section-subtitle {
+            color: #666;
+            max-width: 640px;
+            margin: 0 auto 30px;
+        }
+
+        /* SERVICES – just names */
+        .service-pill {
+            border-radius: 14px;
+            padding: 18px 16px;
+            background: #fff;
+            border: 1px solid #f2d6d6;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.04);
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            font-size: 0.95rem;
+        }
+
+        .service-pill i {
+            color: var(--cvs-red);
+        }
+
+        /* EASY ONBOARDING */
+        .onboarding-card {
+            border-radius: 18px;
+            padding: 24px 24px 20px;
+            background: #fff;
+            border: 1px solid #f3d6d6;
+            box-shadow: 0 10px 26px rgba(0,0,0,0.06);
+        }
+
+        .onboarding-video {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+        }
+
+        .onboarding-steps li {
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+
+        /* WHY WALKIN+ */
+        .why-card {
+            border-radius: 14px;
+            padding: 16px 16px 14px;
+            background: #fff;
+            border: 1px solid #f4e0e0;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+            height: 100%;
+        }
+
+        .why-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            background: #fff5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cvs-red);
+            margin-bottom: 6px;
+        }
+
+        .why-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .why-text {
+            font-size: 0.86rem;
+            color: #555;
+        }
+
+        /* PRICING */
+        .price-card {
+            border-radius: 18px;
+            padding: 24px 22px;
+            background: #fff;
+            border: 1px solid #f0d4d4;
+            box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+            height: 100%;
+        }
+
+        .price-amount {
+            font-size: 2.1rem;
+            font-weight: 800;
+            color: var(--cvs-red);
+        }
+
+        .price-sub {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* REWARDS */
+        .rewards-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #fff5f5;
+            color: var(--cvs-red);
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* CLIENTS */
+        .client-card {
+            border-radius: 16px;
+            padding: 18px 18px 16px;
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.05);
+            height: 100%;
+            text-align: left;
+        }
+
+        .client-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .client-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #ffbebe, #ffdfdf);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b00000;
+            font-weight: 700;
+            font-size: 1rem;
+            overflow: hidden;
+        }
+
+        .client-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .client-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .client-biz {
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        .client-quote {
+            font-size: 0.88rem;
+            color: #555;
+            font-style: italic;
+        }
+
+        /* ABOUT */
+        .about-card {
+            border-radius: 16px;
+            padding: 24px 24px 20px;
+            background: #fff;
+            border: 1px solid #f0e0e0;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.05);
+        }
+
+        footer {
+            border-top: 1px solid #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
+    <div class="container">
+        <a class="navbar-brand" href="#">WalkIn+</a>
+
+        <div class="ms-auto d-flex gap-2">
+            <a href="/login/" class="btn-ghost">Login</a>
+            <a href="/signup" class="btn-cvs">Get Started</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            <!-- LEFT CONTENT -->
+            <div class="col-lg-6">
+                <div class="hero-badge">
+                    <i class="fa-solid fa-bolt"></i>
+                    For clinics, salons, repair shops & more
+                </div>
+                <h1 class="hero-title">
+                    One Walk-In System<br>for all your businesses.
+                </h1>
+                <p class="hero-subtitle mt-3">
+                    WalkIn+ replaces paper registers with a simple digital log
+                    that works for clinics, salons, coaching centers, service shops –
+                    any place where people walk in.
+                </p>
+                <div class="mt-3 text-muted small">
+                    No long setup • Track all branches • Export your records anytime
+                </div>
+            </div>
+
+            <!-- RIGHT: HERO SLIDER -->
+            <div class="col-lg-6">
+                <div class="hero-slider-wrap">
+                    <div id="heroCarousel" class="carousel slide hero-carousel carousel-fade" data-bs-ride="carousel">
+                        <!-- indicators -->
+                        <div class="carousel-indicators mb-0">
+                            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"
+                                    aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"
+                                    aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"
+                                    aria-label="Slide 3"></button>
+                        </div>
+
+                        <div class="carousel-inner">
+                            <!-- SLIDE 1 -->
+                            <div class="carousel-item active">
+                                <div class="hero-slide-card hero-slide-1">
+                                    <span class="hero-slide-tag">
+                                        <i class="fa-solid fa-stethoscope"></i> Clinic Walk-Ins
+                                    </span>
+                                    <h3 class="hero-slide-title">See who walked in – without flipping pages.</h3>
+                                    <p class="hero-slide-text">
+                                        Auto-capture in & out time, reason for visit and companion details,
+                                        so the doctor and staff always know who’s next.
+                                    </p>
+                                    <div class="hero-mock">
+                                        <span>
+                                            <strong>Today</strong>: 47 walk-ins logged
+                                        </span>
+                                        <span class="text-muted">
+                                            0 missed entries
+                                        </span>
+                                    </div>
+                                    <div class="hero-slide-meta mt-2">
+                                        Works for solo clinics, diagnostics, physiotherapy & small hospitals.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SLIDE 2 -->
+                            <div class="carousel-item">
+                                <div class="hero-slide-card hero-slide-2">
+                                    <span class="hero-slide-tag">
+                                        <i class="fa-solid fa-scissors"></i> Salons & Spas
+                                    </span>
+                                    <h3 class="hero-slide-title">Track busy hours without complex software.</h3>
+                                    <p class="hero-slide-text">
+                                        Record every walk-in, know your peak timings,
+                                        and understand which services people come for most.
+                                    </p>
+                                    <div class="hero-mock">
+                                        <span>
+                                            <strong>Peak hour</strong>: 5–8 PM
+                                        </span>
+                                        <span class="text-muted">
+                                            Avg. 23 customers/day
+                                        </span>
+                                    </div>
+                                    <div class="hero-slide-meta mt-2">
+                                        Great for salons, spas, barber shops, nail studios and grooming centers.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SLIDE 3 -->
+                            <div class="carousel-item">
+                                <div class="hero-slide-card hero-slide-3">
+                                    <span class="hero-slide-tag">
+                                        <i class="fa-solid fa-screwdriver-wrench"></i> Service & Repair
+                                    </span>
+                                    <h3 class="hero-slide-title">Know every device or customer that walked in.</h3>
+                                    <p class="hero-slide-text">
+                                        Capture basic details and purpose: “mobile repair”, “AC service”, “laptop issue”
+                                        – and never lose track of who came when.
+                                    </p>
+                                    <div class="hero-mock">
+                                        <span>
+                                            <strong>3 branches</strong> on one dashboard
+                                        </span>
+                                        <span class="text-muted">
+                                            Unlimited walk-in history
+                                        </span>
+                                    </div>
+                                    <div class="hero-slide-meta mt-2">
+                                        Works for electronics shops, garages, appliance service centers and more.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- No visible prev/next controls -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES – JUST NAMES -->
+<section class="py-5">
+    <div class="container text-center">
+        <h2 class="section-title">What you get with WalkIn+</h2>
+        <p class="section-subtitle">
+            Simple tools built only for walk-in businesses – no complicated ERP or POS.
+        </p>
+
+        <div class="row g-3 justify-content-center">
+            <div class="col-md-4 col-lg-3">
+                <div class="service-pill">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    Digital Walk-In Register
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="service-pill">
+                    <i class="fa-solid fa-layer-group"></i>
+                    Multi-Business Dashboard
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="service-pill">
+                    <i class="fa-solid fa-calendar-day"></i>
+                    Daily & Monthly Logs
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="service-pill">
+                    <i class="fa-solid fa-file-export"></i>
+                    One-Click Export to CSV
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="service-pill">
+                    <i class="fa-solid fa-user-clock"></i>
+                    Visit & Time History
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="service-pill">
+                    <i class="fa-solid fa-building-user"></i>
+                    Handle Multiple Branches
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- EASY ONBOARDING VIDEO SECTION -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+                <div class="onboarding-card">
+                    <h2 class="section-title mb-2">See how easy onboarding is</h2>
+                    <p class="mb-3">
+                        No training, no complicated setup. Just create an account, add your business,
+                        and start logging walk-ins in a few clicks.
+                    </p>
+                    <ul class="onboarding-steps list-unstyled mb-0">
+                        <li>1. Sign up with your name, email and mobile number.</li>
+                        <li>2. Add your business or clinic name and location.</li>
+                        <li>3. Open the Walk-In dashboard and start entering visitors.</li>
+                        <li>4. View today’s count, history and export whenever you want.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="onboarding-video">
+                    <!-- Sample video – replace src with your own file later -->
+                    <video controls muted class="w-100" poster="/static/videos/onboarding-poster.jpg">
+                        <source src="/static/videos/onboarding-demo.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="text-muted small mt-2">
+                    This is a sample preview. You can replace this video with your own onboarding demo later.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- WHY WALKIN+ -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="section-title mb-2">Why WalkIn+ works for busy owners</h2>
+            <p class="section-subtitle mb-0">
+                No training needed. If staff can use WhatsApp, they can use WalkIn+.
+            </p>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="why-card">
+                    <div class="why-icon">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div class="why-title">Ultra-fast entry</div>
+                    <div class="why-text">Add a walk-in in under 10 seconds – name, number, purpose, done.</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="why-card">
+                    <div class="why-icon">
+                        <i class="fa-solid fa-diagram-project"></i>
+                    </div>
+                    <div class="why-title">Multiple businesses, one login</div>
+                    <div class="why-text">Switch between clinics, salons or branches from the same account.</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="why-card">
+                    <div class="why-icon">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div class="why-title">Clear daily numbers</div>
+                    <div class="why-text">Know exactly how many people walked in today, this week, this month.</div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="why-card">
+                    <div class="why-icon">
+                        <i class="fa-solid fa-file-arrow-down"></i>
+                    </div>
+                    <div class="why-title">Export anytime</div>
+                    <div class="why-text">Download all records as Excel/CSV for audits, accounts or reports.</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="why-card">
+                    <div class="why-icon">
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                    </div>
+                    <div class="why-title">Cheaper than a notebook</div>
+                    <div class="why-text">Starts at ₹49/month – less than what you spend on one paper register.</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="why-card">
+                    <div class="why-icon">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <div class="why-title">Your data stays yours</div>
+                    <div class="why-text">Secure, private and backed up – no more losing old registers.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PRICING -->
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <h2 class="section-title">Simple pricing for walk-in businesses</h2>
+        <p class="section-subtitle">
+            Pay only for how many businesses you run – not per staff or per device.
+        </p>
+
+        <div class="row g-4 justify-content-center">
+
+            <!-- Monthly 1 business -->
+            <div class="col-md-3">
+                <div class="price-card">
+                    <h5 class="fw-bold mb-1">Starter – Monthly</h5>
+                    <div class="price-amount">₹49<span class="fs-6 fw-normal text-muted">/month</span></div>
+                    <div class="price-sub mb-3">For 1 business</div>
+                    <ul class="list-unstyled text-start small mb-3">
+                        <li>✔ 1 business / branch</li>
+                        <li>✔ Unlimited walk-in records</li>
+                        <li>✔ Daily & monthly logs</li>
+                    </ul>
+                    <a href="/signup" class="btn-cvs w-100">Choose Starter</a>
+                </div>
+            </div>
+
+            <!-- Yearly 1 business -->
+            <div class="col-md-3">
+                <div class="price-card">
+                    <h5 class="fw-bold mb-1">Starter – Yearly</h5>
+                    <div class="price-amount">₹499<span class="fs-6 fw-normal text-muted">/year</span></div>
+                    <div class="price-sub mb-3">For 1 business</div>
+                    <ul class="list-unstyled text-start small mb-3">
+                        <li>✔ 1 business / branch</li>
+                        <li>✔ Unlimited walk-in records</li>
+                        <li>✔ 2 months equivalent free</li>
+                    </ul>
+                    <a href="/signup" class="btn-cvs w-100">Choose Yearly</a>
+                </div>
+            </div>
+
+            <!-- Monthly 3 business -->
+            <div class="col-md-3">
+                <div class="price-card">
+                    <h5 class="fw-bold mb-1">Multi – Monthly</h5>
+                    <div class="price-amount">₹99<span class="fs-6 fw-normal text-muted">/month</span></div>
+                    <div class="price-sub mb-3">Up to 3 businesses</div>
+                    <ul class="list-unstyled text-start small mb-3">
+                        <li>✔ 3 businesses / branches</li>
+                        <li>✔ Unlimited records per business</li>
+                        <li>✔ Basic analytics</li>
+                    </ul>
+                    <a href="/signup" class="btn-cvs w-100">Choose Multi</a>
+                </div>
+            </div>
+
+            <!-- Yearly 3 business -->
+            <div class="col-md-3">
+                <div class="price-card">
+                    <h5 class="fw-bold mb-1">Multi – Yearly</h5>
+                    <div class="price-amount">₹999<span class="fs-6 fw-normal text-muted">/year</span></div>
+                    <div class="price-sub mb-3">Up to 3 businesses</div>
+                    <ul class="list-unstyled text-start small mb-3">
+                        <li>✔ 3 businesses / branches</li>
+                        <li>✔ Unlimited records</li>
+                        <li>✔ Priority support</li>
+                    </ul>
+                    <a href="/signup" class="btn-cvs w-100">Choose Yearly Multi</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3 text-muted small">
+            With any valid plan, add extra business for just <strong>₹25/month</strong> per business.
+        </div>
+    </div>
+</section>
+
+<!-- REWARDS -->
+<section class="py-5">
+    <div class="container text-center">
+        <span class="rewards-badge mb-2">
+            <i class="fa-solid fa-gift"></i> Rewards
+        </span>
+        <h2 class="section-title">Refer & earn free months</h2>
+        <p class="section-subtitle">
+            Share your referral link with other clinics or businesses.
+            When <strong>3 of them buy any plan</strong>, you earn a free month of WalkIn+.
+        </p>
+        <p class="mb-0 text-muted small">
+            Rewards don’t expire – you can redeem them anytime against an upcoming monthly bill.
+        </p>
+    </div>
+</section>
+
+<!-- OUR CLIENTS -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="section-title">Our clients speak for us</h2>
+            <p class="section-subtitle">
+                A few examples of how WalkIn+ quietly runs the front desk for different walk-in businesses.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="client-card">
+                    <div class="client-head">
+                        <div class="client-avatar">
+                            <img src="https://via.placeholder.com/80x80.png?text=DR" alt="Client 1">
+                        </div>
+                        <div>
+                            <div class="client-name">Sri Lakshmi Children’s Clinic</div>
+                            <div class="client-biz">Pediatric Clinic • Hyderabad</div>
+                        </div>
+                    </div>
+                    <p class="client-quote">
+                        “Earlier we used one big register every month. With WalkIn+, I can see today’s walk-ins,
+                        repeat patients and busy days in seconds. My receptionist loves how simple it is.”
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="client-card">
+                    <div class="client-head">
+                        <div class="client-avatar">
+                            <img src="https://via.placeholder.com/80x80.png?text=SL" alt="Client 2">
+                        </div>
+                        <div>
+                            <div class="client-name">Glow & Go Family Salon</div>
+                            <div class="client-biz">Unisex Salon • Bangalore</div>
+                        </div>
+                    </div>
+                    <p class="client-quote">
+                        “We now know exactly how many customers walk in on weekdays vs weekends.
+                        It helped us adjust staff timings and reduce waiting time, especially on Sundays.”
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="client-card">
+                    <div class="client-head">
+                        <div class="client-avatar">
+                            <img src="https://via.placeholder.com/80x80.png?text=MR" alt="Client 3">
+                        </div>
+                        <div>
+                            <div class="client-name">MetroFix Mobile & Laptop Care</div>
+                            <div class="client-biz">Repair Center • Vijayawada</div>
+                        </div>
+                    </div>
+                    <p class="client-quote">
+                        “WalkIn+ helps us log every device that comes in. If a customer calls after a week,
+                        we simply search their number and see when they walked in and what issue they reported.”
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT US -->
+<section class="py-5">
+    <div class="container">
+        <div class="about-card">
+            <h2 class="section-title mb-2">About WalkIn+</h2>
+            <p class="mb-2">
+                WalkIn+ was built for small and mid-size businesses in India that still depend on paper registers
+                to track who walked in. We started with clinics and quickly realised the same problem exists in salons,
+                coaching centers, repair shops, labs and many other walk-in businesses.
+            </p>
+            <p class="mb-2">
+                Our goal is simple – give you a clean, fast and affordable tool that does just one thing really well:
+                capture and manage walk-ins without any extra complexity.
+            </p>
+            <p class="mb-0 text-muted small">
+                No heavy POS. No confusing dashboards. Just a smart, searchable walk-in register that lives in your browser.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="py-4 text-center bg-white">
+    <p class="text-muted mb-0">© 2025 WalkIn+. All rights reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

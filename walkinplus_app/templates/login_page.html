@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WalkIn+ – Login</title>
+
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --cvs-red: #CC0000;
+            --cvs-dark: #A00000;
+            --soft-bg: #f8f9fb;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #ffe8e8 0, #ffffff 40%, #f5f6fb 100%);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .auth-wrapper {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Soft floating shapes in background */
+        .auth-wrapper::before,
+        .auth-wrapper::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(18px);
+            opacity: 0.22;
+            z-index: 0;
+        }
+
+        .auth-wrapper::before {
+            width: 220px;
+            height: 220px;
+            background: #ffd6d6;
+            top: 5%;
+            left: 2%;
+        }
+
+        .auth-wrapper::after {
+            width: 260px;
+            height: 260px;
+            background: #ffefef;
+            bottom: 0;
+            right: -3%;
+        }
+
+        .brand-title {
+            color: var(--cvs-red);
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: 0.05em;
+        }
+
+        .brand-subtitle {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: #999;
+        }
+
+        .login-card {
+            border-radius: 22px;
+            border: 1px solid #ececec;
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #ffffff, #ffe6e6);
+            padding: 20px 26px 18px;
+        }
+
+        .login-body {
+            padding: 24px 26px 30px;
+        }
+
+        .nav-login .nav-link {
+            border-radius: 999px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+            padding: 8px 14px;
+        }
+
+        .nav-login .nav-link i {
+            font-size: 0.85rem;
+        }
+
+        .nav-login .nav-link.active {
+            background: var(--cvs-red);
+            color: #fff !important;
+            box-shadow: 0 8px 18px rgba(204, 0, 0, 0.35);
+        }
+
+        .btn-cvs {
+            background: var(--cvs-red);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 999px;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+        }
+
+        .btn-cvs:hover {
+            background: var(--cvs-dark);
+        }
+
+        .btn-outline-light-small {
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-color: rgba(255,255,255,0.6);
+            color: #fff;
+        }
+
+        .btn-outline-light-small:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.92rem;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 0.1rem rgba(204,0,0,0.25);
+            border-color: rgba(204,0,0,0.6);
+        }
+
+        .form-label {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .small-link {
+            color: var(--cvs-red);
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .small-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Right side */
+        .bg-side {
+            background: radial-gradient(circle at top left, #ff8787 0, #CC0000 40%, #8f0000 100%);
+            color: #fff;
+            position: relative;
+        }
+
+        .bg-side::before {
+            content: "";
+            position: absolute;
+            top: 18%;
+            right: -15%;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            filter: blur(4px);
+        }
+
+        .bg-side h2 {
+            font-weight: 800;
+        }
+
+        .bg-side-sub {
+            font-size: 0.92rem;
+        }
+
+        .feature-pill {
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.4);
+            padding: 6px 12px;
+            font-size: 0.82rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(2px);
+        }
+
+        .feature-pill i {
+            font-size: 0.85rem;
+        }
+
+        .side-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.5);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #ffe9e9;
+            margin-bottom: 10px;
+        }
+
+        .side-badge i {
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container auth-wrapper d-flex align-items-center justify-content-center">
+    <div class="row w-100 justify-content-center">
+        <div class="col-lg-9 col-xl-8">
+
+            <div class="row login-card">
+                <!-- Left side: Login form -->
+                <div class="col-lg-7 bg-white">
+                    <div class="login-header d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="brand-title">WalkIn+</div>
+                            <div class="brand-subtitle">
+                                WALK-IN MANAGEMENT FOR MODERN BUSINESSES
+                            </div>
+                        </div>
+                        <a href="/" class="small-link small">
+                            <i class="fa-solid fa-arrow-left-long me-1"></i> Back to website
+                        </a>
+                    </div>
+
+                    <div class="login-body">
+                        <h4 class="fw-bold mb-1">Login to your dashboard</h4>
+                        <p class="text-muted mb-3 small">
+                            Manage walk-ins for your clinics, salons, repair centers, coaching institutes and more – from one place.
+                        </p>
+
+                        <!-- Alerts -->
+                        {% if error %}
+                            <div class="alert alert-danger py-2 small" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endif %}
+                        {% if success %}
+                            <div class="alert alert-success py-2 small" role="alert">
+                                {{ success }}
+                            </div>
+                        {% endif %}
+
+                        <!-- Tabs: Email / Phone / Username -->
+                        <ul class="nav nav-pills mb-3 nav-login" id="loginTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="email-tab" data-bs-toggle="pill"
+                                        data-bs-target="#email-pane" type="button" role="tab">
+                                    <i class="fa-solid fa-envelope me-1"></i> Email
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="phone-tab" data-bs-toggle="pill"
+                                        data-bs-target="#phone-pane" type="button" role="tab">
+                                    <i class="fa-solid fa-phone me-1"></i> Mobile
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="username-tab" data-bs-toggle="pill"
+                                        data-bs-target="#username-pane" type="button" role="tab">
+                                    <i class="fa-solid fa-user me-1"></i> Username
+                                </button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" id="loginTabContent">
+
+                            <!-- Login with Email -->
+                            <div class="tab-pane fade show active" id="email-pane" role="tabpanel"
+                                 aria-labelledby="email-tab">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <label class="form-label">Email address</label>
+                                        <input type="email" class="form-control" name="email"
+                                               placeholder="owner@yourbusiness.com" required>
+                                    </div>
+
+                                    <div class="mb-2">
+                                        <label class="form-label">Password</label>
+                                        <input type="password" class="form-control" name="password" placeholder="••••••••" required>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <a href="#"
+                                           class="small-link small"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#resetPasswordModal">
+                                            Reset Password
+                                        </a>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-cvs w-100">
+                                        Login with Email
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Login with Phone -->
+                            <div class="tab-pane fade" id="phone-pane" role="tabpanel"
+                                 aria-labelledby="phone-tab">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <label class="form-label">Mobile number</label>
+                                        <input type="tel" class="form-control" name="phone"
+                                               placeholder="+91 98765 43210" required>
+                                    </div>
+
+                                    <div class="mb-2">
+                                        <label class="form-label">Password</label>
+                                        <input type="password" class="form-control" name="password" placeholder="••••••••" required>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <a href="#"
+                                           class="small-link small"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#resetPasswordModal">
+                                            Reset Password
+                                        </a>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-cvs w-100">
+                                        Login with Mobile
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Login with Username -->
+                            <div class="tab-pane fade" id="username-pane" role="tabpanel"
+                                 aria-labelledby="username-tab">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <label class="form-label">Username</label>
+                                        <input type="text" class="form-control" name="username"
+                                               placeholder="business_admin" required>
+                                    </div>
+
+                                    <div class="mb-2">
+                                        <label class="form-label">Password</label>
+                                        <input type="password" class="form-control" name="password" placeholder="••••••••" required>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <a href="#"
+                                           class="small-link small"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#resetPasswordModal">
+                                            Reset Password
+                                        </a>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-cvs w-100">
+                                        Login with Username
+                                    </button>
+                                </form>
+                            </div>
+
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <span class="text-muted small">Don’t have an account?</span>
+                            <a href="/signup/" class="small-link ms-1">Create business account</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right side: Branding / Info -->
+                <div class="col-lg-5 bg-side d-none d-lg-flex flex-column justify-content-between p-4">
+                    <div>
+                        <div class="side-badge">
+                            <i class="fa-solid fa-bolt"></i> Built for walk-in businesses
+                        </div>
+                        <h2 class="mb-2">One login for all your walk-ins.</h2>
+                        <p class="mb-4 bg-side-sub">
+                            Whether you run a clinic, salon, repair shop, coaching center or service studio,
+                            WalkIn+ keeps every visitor entry in one clean, searchable place.
+                        </p>
+
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <div class="feature-pill">
+                                <i class="fa-solid fa-clipboard-check"></i> Digital walk-in register
+                            </div>
+                            <div class="feature-pill">
+                                <i class="fa-solid fa-layer-group"></i> Multi-business dashboard
+                            </div>
+                            <div class="feature-pill">
+                                <i class="fa-solid fa-clock-rotate-left"></i> In & out time history
+                            </div>
+                            <div class="feature-pill">
+                                <i class="fa-solid fa-file-export"></i> Easy export for records
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div class="small text-white-50">
+                            © 2025 WalkIn+. All rights reserved.
+                        </div>
+                        <a href="/" class="btn btn-outline-light-small">
+                            <i class="fa-solid fa-circle-play me-1"></i> See how it works
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- RESET PASSWORD MODAL -->
+<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="reset_action" value="1">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Reset Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="small text-muted mb-2">
+                        Choose how you want to reset your password.
+                        <br>For demo purposes, use OTP <strong>123456</strong>.
+                    </p>
+
+                    <div class="mb-3">
+                        <label class="form-label d-block mb-1">Reset method</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input"
+                                   type="radio"
+                                   name="reset_method"
+                                   id="resetByEmail"
+                                   value="email"
+                                   checked>
+                            <label class="form-check-label small" for="resetByEmail">Email</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input"
+                                   type="radio"
+                                   name="reset_method"
+                                   id="resetByPhone"
+                                   value="phone">
+                            <label class="form-check-label small" for="resetByPhone">Mobile number</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email / Mobile</label>
+                        <input type="text"
+                               class="form-control"
+                               name="identifier"
+                               placeholder="owner@yourbusiness.com or +91 98765 43210"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">OTP</label>
+                        <input type="text"
+                               class="form-control"
+                               name="otp"
+                               placeholder="Enter 6-digit OTP"
+                               required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">New Password</label>
+                            <input type="password"
+                                   class="form-control"
+                                   name="new_password"
+                                   required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Confirm Password</label>
+                            <input type="password"
+                                   class="form-control"
+                                   name="confirm_password"
+                                   required>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary btn-sm"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-cvs btn-sm">
+                        Reset Password
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

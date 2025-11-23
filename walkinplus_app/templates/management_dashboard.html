@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WalkIn+ – Management Dashboard</title>
+
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --cvs-red: #CC0000;
+            --cvs-dark: #A00000;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f7f8fc, #f1f3fa);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .navbar-brand {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--cvs-red) !important;
+            letter-spacing: 0.04em;
+        }
+
+        /* Navbar buttons */
+        .btn-nav {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 16px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid transparent;
+            box-shadow: 0 5px 14px rgba(0,0,0,0.05);
+            transition: background .15s ease, box-shadow .15s ease, transform .15s ease, border-color .15s ease;
+        }
+
+        .btn-home {
+            border-color: #dde0e6;
+            background: #ffffff;
+            color: #444;
+        }
+        .btn-home:hover {
+            background: #f5f5f5;
+            border-color: #cfd3da;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+        }
+
+        .btn-logout {
+            border-color: rgba(204, 0, 0, 0.3);
+            background: #fff5f5;
+            color: var(--cvs-red);
+        }
+        .btn-logout:hover {
+            background: #ffe9e9;
+            border-color: rgba(204,0,0,0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+        }
+
+        .page-wrapper {
+            min-height: calc(100vh - 70px);
+            padding: 20px 16px 28px;
+        }
+
+        /* Layout */
+        .full-height-row {
+            min-height: calc(100vh - 90px);
+        }
+
+        /* Sidebar */
+        .sidebar-card {
+            border-radius: 16px;
+            border: 1px solid #ececec;
+            background: #ffffff;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+            padding: 12px;
+            height: 100%;
+            min-height: calc(100vh - 120px);
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-item {
+            border-radius: 10px;
+            padding: 9px 10px;
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: #444;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+        }
+
+        .sidebar-item i {
+            font-size: 0.95rem;
+            color: #999;
+        }
+
+        .sidebar-item.active {
+            background: #fff5f5;
+            color: var(--cvs-red);
+            box-shadow: 0 6px 14px rgba(204,0,0,0.15);
+        }
+
+        .sidebar-item.active i {
+            color: var(--cvs-red);
+        }
+
+        .sidebar-item:hover:not(.active) {
+            background: #f5f5f5;
+        }
+
+        /* Shared content styles */
+        .section-header-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--cvs-red);
+        }
+
+        .section-header-sub {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .content-card {
+            border-radius: 18px;
+            border: 1px solid #ececec;
+            background: #ffffff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            padding: 18px 18px 16px;
+        }
+
+        /* Business selector */
+        .business-selector {
+            margin-bottom: 12px;
+        }
+
+        .business-selector-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .business-pill {
+            border-radius: 12px;
+            border: 1px solid #e2e4eb;
+            background: #ffffff;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            flex-direction: column;
+            min-width: 160px;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+            transition: background .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+        }
+
+        .business-pill .business-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .business-pill .business-location {
+            font-size: 0.78rem;
+            color: #777;
+        }
+
+        .business-pill.active {
+            border-color: rgba(204,0,0,0.6);
+            background: #fff5f5;
+            box-shadow: 0 10px 26px rgba(204,0,0,0.15);
+            transform: translateY(-1px);
+        }
+
+        .business-pill:hover:not(.active) {
+            background: #f7f8fc;
+        }
+
+        /* Overview tiles */
+        .stat-tile {
+            border-radius: 14px;
+            border: 1px solid #f0f0f0;
+            background: #ffffff;
+            padding: 14px 14px 12px;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.04);
+            height: 100%;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #999;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--cvs-red);
+        }
+
+        .stat-foot {
+            font-size: 0.78rem;
+            color: #666;
+        }
+
+        /* Forms */
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 8px 10px;
+            font-size: 0.9rem;
+        }
+
+        .btn-cvs {
+            background: var(--cvs-red);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 999px;
+            padding: 9px 18px;
+            font-size: 0.9rem;
+        }
+
+        .btn-cvs:hover {
+            background: var(--cvs-dark);
+        }
+
+        /* Reports table */
+        .filters-card {
+            border-radius: 16px;
+            border: 1px solid #ececec;
+            background: #ffffff;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            padding: 14px 14px 8px;
+            margin-bottom: 14px;
+        }
+
+        .table thead {
+            background: #CC0000;
+            color: #fff;
+        }
+
+        .table thead th {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .table tbody td {
+            font-size: 0.86rem;
+            vertical-align: middle;
+        }
+
+        .table-wrapper {
+            max-height: 430px;
+            overflow-y: auto;
+        }
+
+        /* Sections visibility */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Profile-specific styles */
+        .label-pill {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #999;
+            font-weight: 600;
+        }
+
+        .value-text {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .divider {
+            border-top: 1px solid #eee;
+            margin: 18px 0 16px;
+        }
+
+        /* Pricing styles */
+        .current-plan-card {
+            border-radius: 16px;
+            border: 1px solid #ececec;
+            background: #ffffff;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+            padding: 18px 20px;
+        }
+
+        .badge-active {
+            background: #ffe4e4;
+            color: var(--cvs-red);
+            border-radius: 999px;
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            font-weight: 600;
+        }
+
+        .plans-row {
+            margin-top: 18px;
+        }
+
+        .plan-card {
+            border-radius: 18px;
+            border: 1px solid #ececec;
+            background: #ffffff;
+            padding: 20px 18px;
+            box-shadow: 0 10px 28px rgba(0,0,0,0.05);
+            height: 100%;
+        }
+
+        .plan-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .plan-price {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--cvs-red);
+        }
+
+        .plan-tagline {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .plan-feature {
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .btn-outline-cvs {
+            border-radius: 999px;
+            font-weight: 600;
+            border-color: var(--cvs-red);
+            color: var(--cvs-red);
+        }
+
+        .btn-outline-cvs:hover {
+            background: var(--cvs-red);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
+    <div class="container">
+        <a class="navbar-brand" href="/home/">
+            WalkIn+
+        </a>
+
+        <div class="ms-auto d-flex align-items-center gap-2">
+            <a href="/home/" class="btn-nav btn-home">Home</a>
+            <a href="/" class="btn-nav btn-logout">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<!-- PAGE CONTENT -->
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row g-3 full-height-row">
+            <!-- LEFT SIDEBAR -->
+            <div class="col-md-4 col-lg-3">
+                <div class="sidebar-card">
+                    <div class="sidebar-title">Management</div>
+                    <button class="sidebar-item {% if active_tab == 'overview' %}active{% endif %}" data-target="overview">
+                        <i class="fa-solid fa-gauge-high"></i>
+                        Overview
+                    </button>
+                    <button class="sidebar-item {% if active_tab == 'add-business' %}active{% endif %}" data-target="add-business">
+                        <i class="fa-solid fa-briefcase-medical"></i>
+                        Add Business
+                    </button>
+                    <button class="sidebar-item {% if active_tab == 'reports' %}active{% endif %}" data-target="reports">
+                        <i class="fa-solid fa-table-list"></i>
+                        Reports
+                    </button>
+                    <hr class="my-2">
+                    <div class="sidebar-title">Account</div>
+                    <button class="sidebar-item {% if active_tab == 'profile' %}active{% endif %}" data-target="profile">
+                        <i class="fa-solid fa-user-gear"></i>
+                        Profile
+                    </button>
+                    <button class="sidebar-item {% if active_tab == 'pricing' %}active{% endif %}" data-target="pricing">
+                        <i class="fa-solid fa-tags"></i>
+                        Pricing
+                    </button>
+                </div>
+            </div>
+
+            <!-- RIGHT MAIN CONTENT -->
+            <div class="col-md-8 col-lg-9">
+
+                <!-- OVERVIEW SECTION -->
+                <section id="overview-section" class="content-section {% if active_tab == 'overview' %}active{% endif %}">
+                    <div class="mb-3">
+                        <div class="section-header-title mb-0">Business Snapshot</div>
+                        <div class="section-header-sub">
+                            Quick view of today and recent walk-ins for the selected business.
+                        </div>
+                    </div>
+
+                    <!-- Business selector -->
+                    <div class="business-selector">
+                        <div class="business-selector-label">Select Business</div>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% if businesses %}
+                                {% for b in businesses %}
+                                    <button type="button"
+                                            class="business-pill {% if b.is_selected %}active{% endif %}"
+                                            data-business-id="{{ b.id }}">
+                                        <span class="business-name">{{ b.name }}</span>
+                                        <span class="business-location">{{ b.location }}</span>
+                                    </button>
+                                {% endfor %}
+                            {% else %}
+                                <button type="button" class="business-pill active">
+                                    <span class="business-name">Main Clinic</span>
+                                    <span class="business-location">Hyderabad – Main Road</span>
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <p class="text-muted small mb-3">
+                            Use this snapshot to understand how busy your business is today and over the last few days.
+                            Data shown is for <strong>{{ selected_business_name|default:"your clinic" }}</strong>.
+                        </p>
+
+                        <div class="row g-3">
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="stat-tile">
+                                    <div class="stat-label">Today’s Walk-ins</div>
+                                    <div class="stat-value">{{ today_walkins|default:"0" }}</div>
+                                    <div class="stat-foot">From opening time till now</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="stat-tile">
+                                    <div class="stat-label">This Week</div>
+                                    <div class="stat-value">{{ week_walkins|default:"0" }}</div>
+                                    <div class="stat-foot">Mon–Sun total visits</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="stat-tile">
+                                    <div class="stat-label">This Month</div>
+                                    <div class="stat-value">{{ month_walkins|default:"0" }}</div>
+                                    <div class="stat-foot">Month-to-date walk-ins</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="stat-tile">
+                                    <div class="stat-label">Current Pending Walk-ins</div>
+                                    <div class="stat-value">{{ current_pending_walkins|default:"0" }}</div>
+                                    <div class="stat-foot">Not yet clocked out</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="stat-tile">
+                                    <div class="stat-label">Total Walk-ins (All records)</div>
+                                    <div class="stat-value">{{ total_walkins|default:"0" }}</div>
+                                    <div class="stat-foot">All visits stored for this business</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="stat-tile">
+                                    <div class="stat-label">Avg Visits / Day</div>
+                                    <div class="stat-value">{{ avg_per_day|default:"0" }}</div>
+                                    <div class="stat-foot">Last 30 days average</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ADD BUSINESS SECTION -->
+                <section id="add-business-section" class="content-section {% if active_tab == 'add-business' %}active{% endif %}">
+                    <div class="mb-3">
+                        <div class="section-header-title mb-0">Add Business</div>
+                        <div class="section-header-sub">
+                            Register a clinic / branch where you will track walk-ins.
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="form_type" value="add_business">
+                            <input type="hidden" name="tab" value="add-business">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small">Business / Clinic Name</label>
+                                    <input type="text" class="form-control" name="business_name"
+                                           placeholder="Example Clinic & Diagnostics" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small">Location</label>
+                                    <input type="text" class="form-control" name="location"
+                                           placeholder="Hyderabad, near XYZ hospital" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small">Contact Number (optional)</label>
+                                    <input type="tel" class="form-control" name="business_phone"
+                                           placeholder="+91 98765 43210">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small">Clinic Logo (optional)</label>
+                                    <input type="text" class="form-control" name="business_logo"
+                                           placeholder="Logo URL or short name">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small">Additional Notes (optional)</label>
+                                    <textarea class="form-control" name="business_notes" rows="2"
+                                              placeholder="Any special timings, doctor schedule, or notes..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="mt-3 d-flex justify-content-end">
+                                <button type="submit" class="btn-cvs">
+                                    Save Business
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- REPORTS SECTION -->
+                <section id="reports-section" class="content-section {% if active_tab == 'reports' %}active{% endif %}">
+                    <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                        <div>
+                            <div class="section-header-title mb-0">Walk-in Reports</div>
+                            <div class="section-header-sub">
+                                Filter and export detailed visit history for the selected business.
+                            </div>
+                        </div>
+
+                        <!-- Export CSV with current filters & business -->
+                        <a class="btn btn-outline-secondary btn-sm"
+                           href="{% url 'management_dashboard' %}?tab=reports&export=csv{% if selected_business_id %}&business_id={{ selected_business_id }}{% endif %}{% if from_date %}&from_date={{ from_date }}{% endif %}{% if to_date %}&to_date={{ to_date }}{% endif %}{% if time_from %}&time_from={{ time_from }}{% endif %}{% if time_to %}&time_to={{ time_to }}{% endif %}{% if search %}&search={{ search }}{% endif %}">
+                            <i class="fa-solid fa-download me-1"></i> Export CSV
+                        </a>
+                    </div>
+
+                    <!-- Business selector -->
+                    <div class="business-selector mb-2">
+                        <div class="business-selector-label">Select Business</div>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% if businesses %}
+                                {% for b in businesses %}
+                                    <button type="button"
+                                            class="business-pill {% if b.is_selected %}active{% endif %}"
+                                            data-business-id="{{ b.id }}">
+                                        <span class="business-name">{{ b.name }}</span>
+                                        <span class="business-location">{{ b.location }}</span>
+                                    </button>
+                                {% endfor %}
+                            {% else %}
+                                <button type="button" class="business-pill active">
+                                    <span class="business-name">Main Clinic</span>
+                                    <span class="business-location">Hyderabad – Main Road</span>
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="filters-card">
+                        <form class="row g-2 align-items-end" method="get">
+                            <input type="hidden" name="tab" value="reports">
+                            {% if selected_business_id %}
+                                <input type="hidden" name="business_id" value="{{ selected_business_id }}">
+                            {% endif %}
+
+                            <div class="col-md-6 col-lg-3">
+                                <label class="form-label small mb-1">From Date</label>
+                                <input type="date" class="form-control form-control-sm" name="from_date"
+                                       value="{{ from_date }}">
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <label class="form-label small mb-1">To Date</label>
+                                <input type="date" class="form-control form-control-sm" name="to_date"
+                                       value="{{ to_date }}">
+                            </div>
+
+                            <div class="col-md-6 col-lg-3">
+                                <label class="form-label small mb-1">Time Range</label>
+                                <div class="d-flex gap-1">
+                                    <input type="time" class="form-control form-control-sm" name="time_from"
+                                           value="{{ time_from }}">
+                                    <input type="time" class="form-control form-control-sm" name="time_to"
+                                           value="{{ time_to }}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-3">
+                                <label class="form-label small mb-1">Search (Name / Number / Purpose)</label>
+                                <div class="d-flex gap-1">
+                                    <input type="text" class="form-control form-control-sm" name="search"
+                                           value="{{ search }}"
+                                           placeholder="e.g. Ramesh / 98765 / fever">
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-3 mt-2">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn-cvs w-50">
+                                        Go
+                                    </button>
+                                    <a href="{% url 'management_dashboard' %}?tab=reports{% if selected_business_id %}&business_id={{ selected_business_id }}{% endif %}"
+                                       class="btn btn-outline-secondary w-50">
+                                        Clear
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Records Table -->
+                    <div class="content-card mt-2">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="small text-muted">
+                                Showing filtered walk-ins for <strong>{{ selected_business_name|default:"this business" }}</strong> (max 200 rows)
+                            </div>
+                            <span class="badge bg-light text-dark border small">
+                                {{ total_records|default:"0" }} records
+                            </span>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="table table-hover table-sm align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Customer Name</th>
+                                        <th>Customer DOB</th>
+                                        <th>Purpose</th>
+                                        <th>Walk-in Date</th>
+                                        <th>In Time</th>
+                                        <th>Out Time</th>
+                                        <th>Contact Number</th>
+                                        <th>Companion</th>
+                                        <th>Relation</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if records %}
+                                        {% for r in records %}
+                                        <tr>
+                                            <td>{{ r.cust_name }}</td>
+                                            <td>{{ r.cust_dob }}</td>
+                                            <td>{{ r.cust_visit_purpose }}</td>
+                                            <td>{{ r.cust_walkin_date }}</td>
+                                            <td>{{ r.cust_clockin }}</td>
+                                            <td>{{ r.cust_clockout }}</td>
+                                            <td>{{ r.cust_contact_number }}</td>
+                                            <td>{{ r.cust_companion }}</td>
+                                            <td>{{ r.cust_companion_relation }}</td>
+                                            <td>{{ r.cust_notes }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="10" class="text-center text-muted small py-3">
+                                                No records found for this filter.
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- PROFILE SECTION -->
+                <section id="profile-section" class="content-section {% if active_tab == 'profile' %}active{% endif %}">
+                    <div class="mb-3">
+                        <div class="section-header-title mb-0">Profile</div>
+                        <div class="section-header-sub">
+                            View and manage your admin account and clinics.
+                        </div>
+                    </div>
+
+                    <!-- Account details -->
+                    <div class="content-card mb-3">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <div class="fw-bold mb-1">Account Profile</div>
+                                <div class="text-muted small">Basic login and contact details.</div>
+                            </div>
+                            <button class="btn btn-outline-secondary btn-sm"
+                                    data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                                <i class="fa-solid fa-pen-to-square me-1"></i> Edit
+                            </button>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <div class="label-pill">Username</div>
+                                    <div class="value-text">{{ username|default:"clinic_admin" }}</div>
+                                </div>
+                                <div class="mb-2">
+                                    <div class="label-pill">Name</div>
+                                    <div class="value-text">{{ display_name|default:"Dr. Sharma" }}</div>
+                                </div>
+                                <div class="mb-2">
+                                    <div class="label-pill">Email</div>
+                                    <div class="value-text">{{ email|default:"clinic@example.com" }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <div class="label-pill">Mobile Number</div>
+                                    <div class="value-text">{{ phone|default:"+91 98765 43210" }}</div>
+                                </div>
+                                <div class="mb-2">
+                                    <div class="label-pill">Password</div>
+                                    <div class="value-text">••••••••</div>
+                                    <div class="text-muted small">
+                                        Last updated: {{ password_updated_at|default:"Jan 2025" }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- List of Businesses -->
+                    <div class="content-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <div class="fw-bold mb-1">Businesses</div>
+                                <div class="text-muted small">Manage clinics connected to this account.</div>
+                            </div>
+                            <a href="javascript:void(0)" class="btn btn-outline-secondary btn-sm"
+                               onclick="document.querySelector('[data-target=\\'add-business\\']').click();">
+                                + Add Business
+                            </a>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="table table-sm align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Business Name</th>
+                                        <th>Location</th>
+                                        <th>Logo</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if businesses %}
+                                        {% for b in businesses %}
+                                        <tr>
+                                            <td>{{ b.name }}</td>
+                                            <td>{{ b.location }}</td>
+                                            <td>
+                                                {% if b.logo %}
+                                                    <span class="text-muted small">{{ b.logo }}</span>
+                                                {% else %}
+                                                    <span class="text-muted small">No logo</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if b.customer_dashboard_enabled %}
+                                                    <span class="badge bg-success-subtle text-success-emphasis">
+                                                        Active
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary-subtle text-secondary-emphasis">
+                                                        Inactive
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-secondary btn-sm"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editBusinessModal-{{ b.id }}">
+                                                    Edit
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted small py-3">
+                                                No businesses added yet. Use <strong>Add Business</strong> from the left panel.
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PRICING SECTION -->
+                <section id="pricing-section" class="content-section {% if active_tab == 'pricing' %}active{% endif %}">
+                    <div class="mb-3">
+                        <div class="section-header-title mb-0">Pricing</div>
+                        <div class="section-header-sub">
+                            Your current plan and available upgrades.
+                        </div>
+                    </div>
+
+                    <!-- Current Plan -->
+                    <div class="current-plan-card mb-3">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <div>
+                                <div class="text-muted small mb-1">Current Plan</div>
+                                <div class="fw-bold">
+                                    Starter Pack – Monthly – ₹49 per month
+                                </div>
+                                <div class="text-muted small">
+                                    1 business • Unlimited walk-in records • Email support • Basic analytics
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column align-items-end gap-2">
+                                <span class="badge-active">Active</span>
+                                <a href="#" class="btn btn-outline-secondary btn-sm">
+                                    Download Invoice
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plans Grid -->
+                    <div class="row plans-row g-3">
+                        <!-- Plan 1: 1 business – Monthly -->
+                        <div class="col-md-3">
+                            <div class="plan-card h-100 d-flex flex-column">
+                                <div class="plan-name">Starter – Monthly</div>
+                                <div class="plan-price mt-1">
+                                    ₹49
+                                    <div class="fs-6 fw-normal text-muted">per month</div>
+                                </div>
+                                <p class="plan-tagline">Perfect for a single walk-in business getting started.</p>
+                                <div class="mt-3 mb-3">
+                                    <div class="plan-feature">✔ 1 business</div>
+                                    <div class="plan-feature">✔ Unlimited walk-in records</div>
+                                    <div class="plan-feature">✔ Basic reports & exports</div>
+                                </div>
+                                <div class="mt-auto">
+                                    <button class="btn btn-outline-cvs w-100" disabled>
+                                        Current Plan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Plan 2: 1 business – Yearly -->
+                        <div class="col-md-3">
+                            <div class="plan-card h-100 d-flex flex-column">
+                                <div class="plan-name">Starter – Yearly</div>
+                                <div class="plan-price mt-1">
+                                    ₹499
+                                    <div class="fs-6 fw-normal text-muted">per year</div>
+                                </div>
+                                <p class="plan-tagline">Same features as Starter Monthly, billed once a year.</p>
+                                <div class="mt-3 mb-3">
+                                    <div class="plan-feature">✔ 1 business</div>
+                                    <div class="plan-feature">✔ Unlimited walk-in records</div>
+                                    <div class="plan-feature">✔ All updates included</div>
+                                </div>
+                                <div class="mt-auto">
+                                    <button class="btn btn-cvs w-100">
+                                        Switch to Yearly
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Plan 3: 3 businesses – Monthly -->
+                        <div class="col-md-3">
+                            <div class="plan-card h-100 d-flex flex-column">
+                                <div class="plan-name">Growth – Monthly</div>
+                                <div class="plan-price mt-1">
+                                    ₹99
+                                    <div class="fs-6 fw-normal text-muted">per month</div>
+                                </div>
+                                <p class="plan-tagline">For clinics or businesses with multiple branches.</p>
+                                <div class="mt-3 mb-3">
+                                    <div class="plan-feature">✔ Up to 3 businesses</div>
+                                    <div class="plan-feature">✔ Unlimited walk-in records</div>
+                                    <div class="plan-feature">✔ Advanced filters & analytics</div>
+                                </div>
+                                <div class="mt-auto">
+                                    <button class="btn btn-outline-cvs w-100">
+                                        Upgrade to Growth Monthly
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Plan 4: 3 businesses – Yearly -->
+                        <div class="col-md-3">
+                            <div class="plan-card h-100 d-flex flex-column">
+                                <div class="plan-name">Growth – Yearly</div>
+                                <div class="plan-price mt-1">
+                                    ₹999
+                                    <div class="fs-6 fw-normal text-muted">per year</div>
+                                </div>
+                                <p class="plan-tagline">Best value for multi-branch setups on yearly billing.</p>
+                                <div class="mt-3 mb-3">
+                                    <div class="plan-feature">✔ Up to 3 businesses</div>
+                                    <div class="plan-feature">✔ Unlimited walk-in records</div>
+                                    <div class="plan-feature">✔ Priority support</div>
+                                </div>
+                                <div class="mt-auto">
+                                    <button class="btn btn-outline-cvs w-100">
+                                        Upgrade to Growth Yearly
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Extra Business Add-on -->
+                    <div class="mt-4 p-3 content-card">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                            <div>
+                                <div class="fw-semibold mb-1">Need more than your plan limit?</div>
+                                <div class="text-muted small">
+                                    With any active plan, you can add extra businesses at just
+                                    <strong>₹25 per business per month</strong>.
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-cvs">
+                                <i class="fa-solid fa-plus me-1"></i> Add Extra Business
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div> <!-- end col-md-8 col-lg-9 -->
+        </div> <!-- end row -->
+    </div> <!-- end container-fluid -->
+</div> <!-- end page-wrapper -->
+
+<!-- EDIT PROFILE MODAL -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="update_profile">
+                <input type="hidden" name="tab" value="profile">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="form-label small">Username</label>
+                        <input type="text" class="form-control" name="username"
+                               value="{{ username }}">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Name</label>
+                        <input type="text" class="form-control" name="display_name"
+                               value="{{ display_name }}">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Email</label>
+                        <input type="email" class="form-control" name="email"
+                               value="{{ email }}">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Mobile Number</label>
+                        <input type="tel" class="form-control" name="phone"
+                               value="{{ phone }}">
+                    </div>
+                    <div class="mb-1">
+                        <label class="form-label small">New Password (optional)</label>
+                        <input type="password" class="form-control" name="password"
+                               placeholder="Leave blank to keep current password">
+                    </div>
+                    <div class="text-muted small mt-1">
+                        Changing password will log you out and you’ll need to log in again.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-cvs">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT BUSINESS MODALS -->
+{% if businesses %}
+    {% for b in businesses %}
+        <div class="modal fade" id="editBusinessModal-{{ b.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="update_business">
+                        <input type="hidden" name="business_id" value="{{ b.id }}">
+                        <input type="hidden" name="tab" value="profile">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Business – {{ b.name }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-2">
+                                <label class="form-label small">Business / Clinic Name</label>
+                                <input type="text" class="form-control" name="business_name"
+                                       value="{{ b.name }}" required>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Location</label>
+                                <input type="text" class="form-control" name="location"
+                                       value="{{ b.location }}" required>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Logo (optional)</label>
+                                <input type="text" class="form-control" name="business_logo"
+                                       value="{{ b.logo }}" placeholder="Logo URL or short name">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Status</label>
+                                <select class="form-select" name="status">
+                                    <option value="active"
+                                        {% if b.customer_dashboard_enabled %}selected{% endif %}>
+                                        Active
+                                    </option>
+                                    <option value="inactive"
+                                        {% if not b.customer_dashboard_enabled %}selected{% endif %}>
+                                        Inactive
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary"
+                                    data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-cvs">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Sidebar tab switching
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebarItems = document.querySelectorAll('.sidebar-item');
+        const sections = {
+            overview: document.getElementById('overview-section'),
+            'add-business': document.getElementById('add-business-section'),
+            reports: document.getElementById('reports-section'),
+            profile: document.getElementById('profile-section'),
+            pricing: document.getElementById('pricing-section')
+        };
+
+        sidebarItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const target = item.getAttribute('data-target');
+
+                // Toggle active state in sidebar
+                sidebarItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                // Show the target section
+                Object.keys(sections).forEach(key => {
+                    if (sections[key]) {
+                        if (key === target) {
+                            sections[key].classList.add('active');
+                        } else {
+                            sections[key].classList.remove('active');
+                        }
+                    }
+                });
+
+                // Update URL tab param without full reload (nice UX)
+                const url = new URL(window.location);
+                url.searchParams.set('tab', target);
+                window.history.replaceState({}, '', url);
+            });
+        });
+
+        // Business selector click behaviour - reload with business_id
+        function setupBusinessSelector() {
+            const allPills = document.querySelectorAll('.business-pill');
+            allPills.forEach(pill => {
+                pill.addEventListener('click', () => {
+                    const businessId = pill.getAttribute('data-business-id');
+                    if (!businessId) return;
+                    const url = new URL(window.location);
+                    url.searchParams.set('business_id', businessId);
+                    // keep tab param as is
+                    window.location = url.toString();
+                });
+            });
+        }
+
+        setupBusinessSelector();
+    });
+</script>
+</body>
+</html>
