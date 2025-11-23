@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-)31ehc_$#2sv0y%y@*kfwsta$k@d^vf31o!yv$wk=gc(cc)9a0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "walkinplus-web.onrender.com",
+    "walkinplus.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
